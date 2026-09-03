@@ -18,10 +18,6 @@ import styles from './AuthFileQuota.module.scss';
 /** 认证文件卡片外衣：紧凑额度样式绑定成类型化契约（缺键在模块初始化即抛）。 */
 const compactQuotaClasses = bindQuotaClasses(styles, 'AuthFileQuota.module.scss');
 
-const assertNever = (value: never): never => {
-  throw new Error(`Unsupported quota type: ${value}`);
-};
-
 type QuotaMapUpdater = (
   updater: (prev: Record<string, QuotaCardState>) => Record<string, QuotaCardState>
 ) => void;
@@ -46,8 +42,9 @@ export function AuthFileQuotaSection(props: AuthFileQuotaSectionProps) {
     if (quotaType === 'claude') return state.claudeQuota[file.name] as QuotaCardState | undefined;
     if (quotaType === 'codex') return state.codexQuota[file.name] as QuotaCardState | undefined;
     if (quotaType === 'kimi') return state.kimiQuota[file.name] as QuotaCardState | undefined;
-    if (quotaType === 'xai') return state.xaiQuota[file.name] as QuotaCardState | undefined;
-    return assertNever(quotaType);
+    if (quotaType === 'codebuddy')
+      return state.codebuddyQuota[file.name] as QuotaCardState | undefined;
+    return state.xaiQuota[file.name] as QuotaCardState | undefined;
   });
 
   const updateQuotaState = useQuotaStore(
