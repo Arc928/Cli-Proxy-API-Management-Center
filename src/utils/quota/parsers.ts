@@ -4,6 +4,7 @@
 
 import type {
   ClaudeUsagePayload,
+  CodeBuddyPackageAccount,
   CodexUsagePayload,
   KimiUsagePayload,
   XaiBillingPayload,
@@ -201,4 +202,32 @@ export function parseXaiBillingPayload(payload: unknown): XaiBillingPayload | nu
     return payload as XaiBillingPayload;
   }
   return null;
+}
+
+/**
+ * Extract the package list from a CodeBuddy billing-meter payload.
+ *
+ * The meter nests its accounts under `data.Response.Data.Accounts`; a failed
+ * request instead carries a non-zero `code` and no `Response` key, which this
+ * collapses to an empty list so the caller can report "no data" uniformly.
+ */
+export function parseCodeBuddyAccounts(payload: unknown): CodeBuddyPackageAccount[] {
+  if (payload === undefined || payload === null) return [];
+  if (typeof payload === 'string') {
+    const trimmed = payload.trim();
+    if (!trimmed) return [];
+    try {
+      payload = JSON.parse(trimmed);
+    } catch {
+      return [];
+    }
+  }
+  if (typeof payload !== 'object') return [];
+  const root = payload as Record<string, unknown>;
+  if (typeof root.code === 'number' && root.code !== 0) return [];
+  const data = root.data as Record<string, unknown> | undefined;
+  const response = data?.Response as Record<string, unknown> | undefined;
+  const responseData = response?.Data as Record<string, unknown> | undefined;
+  const accounts = responseData?.Accounts;
+  return Array.isArray(accounts) ? (accounts as CodeBuddyPackageAccount[]) : [];
 }

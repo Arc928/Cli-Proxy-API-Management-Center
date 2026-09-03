@@ -397,3 +397,42 @@ export interface XaiQuotaState {
   error?: string;
   errorStatus?: number;
 }
+
+// CodeBuddy API payload types (Tencent copilot billing meter)
+export interface CodeBuddyPackageAccount {
+  SubProductCode?: string;
+  SubProductName?: string;
+  PackageName?: string;
+  Status?: number;
+  CapacitySize?: number;
+  CapacityUsed?: number;
+  CapacityRemain?: number;
+  CycleCapacitySize?: number | null;
+  CycleCapacityUsed?: number | null;
+  CycleCapacityRemain?: number | null;
+  CapacityUnit?: string;
+  CycleStartTime?: string;
+  CycleEndTime?: string;
+}
+
+export interface CodeBuddyQuotaRow {
+  id: string;
+  label?: string;
+  labelKey?: string;
+  labelParams?: Record<string, string | number>;
+  used: number;
+  limit: number;
+  unit?: string;
+  /** Cycle rollover instant in epoch ms, when the payload carries one. */
+  resetAtMs?: number | null;
+  /** Window length in hours derived from the cycle start/end pair. */
+  periodHours?: number | null;
+}
+
+export interface CodeBuddyQuotaState {
+  status: 'idle' | 'loading' | 'success' | 'error';
+  rows: CodeBuddyQuotaRow[];
+  error?: string;
+  errorStatus?: number;
+}
+

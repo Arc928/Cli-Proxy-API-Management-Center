@@ -490,6 +490,19 @@
     "limit_index": "Limit #{{index}}",
     "reset_hint": "resets in {{hint}}"
   },
+  "codebuddy_quota": {
+    "title": "CodeBuddy Quota",
+    "empty_title": "No CodeBuddy Auth Files",
+    "empty_desc": "Upload a CodeBuddy credential to view remaining quota.",
+    "idle": "Click here to refresh quota",
+    "loading": "Loading quota...",
+    "load_failed": "Failed to load quota: {{message}}",
+    "missing_auth_index": "Auth file missing auth_index",
+    "empty_data": "No quota data available (CN site only)",
+    "refresh_button": "Refresh Quota",
+    "fetch_all": "Fetch All",
+    "reset_hint": "resets in {{hint}}"
+  },
   "xai_quota": {
     "title": "Grok Quota",
     "empty_title": "No xAI/Grok Auth Files",
@@ -1179,7 +1192,7 @@
     "meta_loaded": "{{count}} loaded",
     "meta_attention": "{{count}} need attention",
     "empty_title": "No quota-capable credentials",
-    "empty_desc": "Connect an Antigravity, Claude, Codex, xAI, or Kimi credential to track its quota here.",
+    "empty_desc": "Connect Antigravity, Claude, Codex, xAI, Kimi, or CodeBuddy credentials to view quotas here.",
     "windows_title": "Quota windows",
     "windows_span_weekly": "two weeks",
     "windows_span_session": "three days",

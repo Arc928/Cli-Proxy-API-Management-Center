@@ -11,6 +11,8 @@ import type {
   KimiLimitItem,
   KimiLimitWindow,
   KimiQuotaRow,
+  CodeBuddyPackageAccount,
+  CodeBuddyQuotaRow,
   XaiBillingConfig,
   XaiBillingPeriod,
   XaiBillingPeriodType,
@@ -18,7 +20,7 @@ import type {
   XaiProductUsageSummary,
 } from '@/types';
 import { normalizeNumberValue, normalizeQuotaFraction, normalizeStringValue } from './parsers';
-import { parseOffsetSecondsToMs, resolveResetMs } from './resetInstants';
+import { parseIsoToMs, parseOffsetSecondsToMs, resolveResetMs } from './resetInstants';
 
 const ANTIGRAVITY_BUCKET_WINDOW_ORDER = new Map<string, number>([
   ['5h', 0],
@@ -569,4 +571,59 @@ export function mergeXaiBillingSummaries(
     billingPeriodEnd: primary.billingPeriodEnd ?? fallback.billingPeriodEnd,
     usedPercent: primary.usedPercent ?? fallback.usedPercent,
   };
+}
+
+/** The id of the main (monthly-cycle) CodeBuddy package; everything else is a bonus pack. */
+const CODEBUDDY_MAIN_SUB_PRODUCT = 'sp_tcaca_codebuddy_ide';
+
+const toFiniteNumber = (value: unknown): number => {
+  const normalized = normalizeNumberValue(value);
+  return normalized === null ? 0 : normalized;
+};
+
+/**
+ * Cycle length in hours from the `CycleStartTime` / `CycleEndTime` pair.
+ *
+ * The meter timestamps are plain `YYYY-MM-DD HH:MM:SS` strings in the account's
+ * local (Beijing) time — no zone designator — so they are parsed as-is and both
+ * halves shift together; the derived *length* stays correct regardless.
+ */
+const codeBuddyPeriodHours = (account: CodeBuddyPackageAccount): number | null => {
+  const start = parseIsoToMs(account.CycleStartTime);
+  const end = parseIsoToMs(account.CycleEndTime);
+  if (start === null || end === null || end <= start) return null;
+  return (end - start) / 3_600_000;
+};
+
+/**
+ * One quota row per active CodeBuddy package.
+ *
+ * Each package reports a package total (`Capacity*`) and a cycle usage
+ * (`CycleCapacity*`). For the main monthly package the cycle figures are the
+ * live meter; bonus packs may null them out, in which case the package figures
+ * are the best available estimate.
+ */
+export function buildCodeBuddyQuotaRows(accounts: CodeBuddyPackageAccount[]): CodeBuddyQuotaRow[] {
+  return accounts
+    .filter((account) => (account.Status ?? 0) === 0)
+    .map((account, index): CodeBuddyQuotaRow => {
+      const isMain = account.SubProductCode === CODEBUDDY_MAIN_SUB_PRODUCT;
+      const cycleUsed = account.CycleCapacityUsed;
+      const cycleRemain = account.CycleCapacityRemain;
+      const used = isMain || cycleUsed != null ? toFiniteNumber(cycleUsed) : toFiniteNumber(account.CapacityUsed);
+      const remain =
+        isMain || cycleRemain != null
+          ? toFiniteNumber(cycleRemain)
+          : toFiniteNumber(account.CapacityRemain);
+      const limit = toFiniteNumber(account.CapacitySize) || used + remain;
+      return {
+        id: account.SubProductCode || `package-${index}`,
+        label: account.SubProductName || account.PackageName || undefined,
+        used,
+        limit,
+        unit: account.CapacityUnit || 'credits',
+        resetAtMs: parseIsoToMs(account.CycleEndTime),
+        periodHours: codeBuddyPeriodHours(account),
+      };
+    });
 }

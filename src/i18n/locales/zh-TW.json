@@ -490,6 +490,19 @@
     "limit_index": "限額 #{{index}}",
     "reset_hint": "{{hint}} 後重置"
   },
+  "codebuddy_quota": {
+    "title": "CodeBuddy 額度",
+    "empty_title": "暫無 CodeBuddy 認證",
+    "empty_desc": "上傳 CodeBuddy 認證檔案後即可查看額度。",
+    "idle": "點擊此處重新整理額度",
+    "loading": "正在載入額度...",
+    "load_failed": "額度取得失敗：{{message}}",
+    "missing_auth_index": "認證檔案缺少 auth_index",
+    "empty_data": "暫無額度資料（僅國內站）",
+    "refresh_button": "重新整理額度",
+    "fetch_all": "取得全部",
+    "reset_hint": "{{hint}} 後重置"
+  },
   "xai_quota": {
     "title": "Grok 配額",
     "empty_title": "暫無 xAI/Grok 驗證",
@@ -1205,7 +1218,7 @@
     "meta_loaded": "{{count}} 個已載入",
     "meta_attention": "{{count}} 個需關注",
     "empty_title": "暫無可查配額的憑證",
-    "empty_desc": "接入 Antigravity、Claude、Codex、xAI 或 Kimi 憑證後即可在此查看配額。",
+    "empty_desc": "接入 Antigravity、Claude、Codex、xAI、Kimi 或 CodeBuddy 憑證後即可在此查看額度。",
     "windows_title": "配額視窗",
     "windows_span_weekly": "兩週",
     "windows_span_session": "三天",

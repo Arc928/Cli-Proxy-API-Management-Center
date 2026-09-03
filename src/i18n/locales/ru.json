@@ -477,6 +477,19 @@
     "limit_index": "Лимит #{{index}}",
     "reset_hint": "сброс через {{hint}}"
   },
+  "codebuddy_quota": {
+    "title": "Квота CodeBuddy",
+    "empty_title": "Нет файлов авторизации CodeBuddy",
+    "empty_desc": "Загрузите учётные данные CodeBuddy, чтобы просмотреть остаток квоты.",
+    "idle": "Нажмите здесь, чтобы обновить квоту",
+    "loading": "Загрузка квоты...",
+    "load_failed": "Не удалось получить квоту: {{message}}",
+    "missing_auth_index": "В файле авторизации отсутствует auth_index",
+    "empty_data": "Нет данных о квоте (только китайский сайт)",
+    "refresh_button": "Обновить квоту",
+    "fetch_all": "Загрузить все",
+    "reset_hint": "сброс через {{hint}}"
+  },
   "xai_quota": {
     "title": "Квота Grok",
     "empty_title": "Файлы авторизации xAI/Grok отсутствуют",
@@ -1166,7 +1179,7 @@
     "meta_loaded": "{{count}} загружено",
     "meta_attention": "{{count}} требуют внимания",
     "empty_title": "Нет учётных данных с квотами",
-    "empty_desc": "Подключите учётные данные Antigravity, Claude, Codex, xAI или Kimi, чтобы отслеживать квоту здесь.",
+    "empty_desc": "Подключите учётные данные Antigravity, Claude, Codex, xAI, Kimi или CodeBuddy, чтобы видеть квоты здесь.",
     "windows_title": "Окна квот",
     "windows_span_weekly": "две недели",
     "windows_span_session": "три дня",

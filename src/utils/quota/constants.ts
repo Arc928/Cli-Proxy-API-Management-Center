@@ -145,6 +145,17 @@ export const KIMI_REQUEST_HEADERS = {
   Authorization: 'Bearer $TOKEN$',
 };
 
+// CodeBuddy API configuration (Tencent copilot billing meter, CN site only;
+// the international .ai host exposes no credit meter).
+export const CODEBUDDY_BILLING_METER_URL =
+  'https://copilot.tencent.com/v2/billing/meter/get-user-resource';
+
+export const CODEBUDDY_REQUEST_HEADERS = {
+  Authorization: 'Bearer $TOKEN$',
+  'Content-Type': 'application/json',
+  'User-Agent': 'CLI/2.106.3 CodeBuddy/2.106.3',
+};
+
 // xAI/Grok API configuration
 export const XAI_BILLING_WEEKLY_URL = 'https://cli-chat-proxy.grok.com/v1/billing?format=credits';
 export const XAI_BILLING_MONTHLY_URL = 'https://cli-chat-proxy.grok.com/v1/billing';
