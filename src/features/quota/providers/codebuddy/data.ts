@@ -42,15 +42,10 @@ const fetchCodeBuddyQuota = async (
     throw new Error(t('codebuddy_quota.missing_auth_index'));
   }
 
-  const rangeBegin = new Date(Date.now() - 24 * 3_600_000)
-    .toISOString()
-    .replace('T', ' ')
-    .slice(0, 19);
-  const rangeEnd = new Date(Date.now() + 365 * 24 * 3_600_000)
-    .toISOString()
-    .replace('T', ' ')
-    .slice(0, 19);
-
+  // No PackageEndTimeRange filter: that range matches the package's *deduction*
+  // validity, which for the free basic package extends years out and gets
+  // silently excluded by a bounded window — dropping the very package the
+  // account runs on. Query everything and let the builder filter to active.
   const result = await apiCallApi.request({
     authIndex,
     method: 'POST',
@@ -61,8 +56,6 @@ const fetchCodeBuddyQuota = async (
       PageSize: 100,
       ProductCode: 'p_tcaca',
       Status: [0, 3],
-      PackageEndTimeRangeBegin: rangeBegin,
-      PackageEndTimeRangeEnd: rangeEnd,
     }),
   });
 
